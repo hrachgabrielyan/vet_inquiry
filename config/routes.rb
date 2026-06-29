@@ -9,6 +9,13 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  resources :inquiries, only: [:new, :create, :show]
+
+  namespace :service_desks do
+    resources :inquiries, only: [:index] do
+      member { patch :update_status }
+    end
+  end
+
+  root to: "inquiries#new"
 end

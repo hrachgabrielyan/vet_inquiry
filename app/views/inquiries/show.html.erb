@@ -1,0 +1,9 @@
+<div class="status-container">
+  <h1>Inquiry Status</h1>
+
+  <turbo-frame id="inquiry-status"
+               src="<%= inquiry_path(@inquiry) %>"
+               data-turbo-refresh-interval="3000">
+    <%= render "status_card", inquiry: @inquiry %>
+  </turbo-frame>
+</div>

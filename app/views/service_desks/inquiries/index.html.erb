@@ -1,0 +1,13 @@
+<div class="dashboard">
+  <h1>Service Desk Dashboard</h1>
+
+  <% if @inquiries.empty? %>
+    <p>No inquiries yet.</p>
+  <% else %>
+    <% @inquiries.each do |inquiry| %>
+      <turbo-frame id="inquiry_<%= inquiry.id %>">
+        <%= render "inquiry_card", inquiry: inquiry %>
+      </turbo-frame>
+    <% end %>
+  <% end %>
+</div>

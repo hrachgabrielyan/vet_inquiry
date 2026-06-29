@@ -1,0 +1,13 @@
+<div class="inquiry-card">
+  <p><strong><%= inquiry.reference_number %></strong></p>
+  <p><%= inquiry.first_name %> <%= inquiry.last_name %></p>
+  <p>Category: <%= inquiry.category.humanize %></p>
+  <p>Status: <%= inquiry.status.humanize %></p>
+  <% if inquiry.service_desk %>
+    <p>Desk: <%= inquiry.service_desk.name %></p>
+  <% end %>
+
+  <%= form_with url: update_status_service_desks_inquiry_path(inquiry), method: :patch do |f| %>
+    <%= f.select :status, Inquiry.statuses.keys.map { |s| [s.humanize, s] }, {}, { onchange: "this.form.requestSubmit()" } %>
+  <% end %>
+</div>

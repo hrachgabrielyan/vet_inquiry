@@ -1,0 +1,14 @@
+<div class="status-card">
+  <p><strong>Reference:</strong> <%= inquiry.reference_number %></p>
+  <p><strong>Status:</strong> <%= inquiry.status.humanize %></p>
+  <p><strong>Category:</strong> <%= inquiry.category.humanize %></p>
+  <p><strong>Topic:</strong> <%= inquiry.topic %></p>
+
+  <% if inquiry.routed? || inquiry.in_progress? || inquiry.resolved? %>
+    <p><strong>Assigned to:</strong> <%= inquiry.service_desk.name %></p>
+  <% end %>
+
+  <% if inquiry.routing_failed? %>
+    <p class="error">Routing failed. Please contact VA support.</p>
+  <% end %>
+</div>

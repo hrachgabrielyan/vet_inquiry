@@ -1,0 +1,50 @@
+<div class="form-container">
+  <h1>Submit a VA Inquiry</h1>
+
+  <% if @inquiry.errors.any? %>
+    <div class="error-summary">
+      <ul>
+        <% @inquiry.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @inquiry, data: { controller: "inquiry-form" } do |f| %>
+    <fieldset data-inquiry-form-target="step">
+      <legend>Step 1: Category</legend>
+      <%= f.label :category %>
+      <%= f.select :category, [["Education", "education"], ["Health Care", "health_care"], ["Benefits", "benefits"], ["Housing", "housing"], ["General", "general"]], { include_blank: "Select a category" } %>
+      <div class="form-actions">
+        <button type="button" data-action="inquiry-form#next">Next</button>
+      </div>
+    </fieldset>
+
+    <fieldset data-inquiry-form-target="step" hidden>
+      <legend>Step 2: Your Question</legend>
+      <%= f.label :topic %>
+      <%= f.text_field :topic, placeholder: "Brief subject" %>
+      <%= f.label :body, "Question" %>
+      <%= f.text_area :body, rows: 6, placeholder: "Describe your question in detail" %>
+      <div class="form-actions">
+        <button type="button" data-action="inquiry-form#back">Back</button>
+        <button type="button" data-action="inquiry-form#next">Next</button>
+      </div>
+    </fieldset>
+
+    <fieldset data-inquiry-form-target="step" hidden>
+      <legend>Step 3: Contact Info</legend>
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %>
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name %>
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+      <div class="form-actions">
+        <button type="button" data-action="inquiry-form#back">Back</button>
+        <%= f.submit "Submit Inquiry" %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
