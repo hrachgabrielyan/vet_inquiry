@@ -17,6 +17,12 @@ class InquiriesController < ApplicationController
     @inquiry = Inquiry.find_by!(reference_number: params[:id])
   end
 
+  def lookup
+    return unless params[:email].present?
+    @inquiries = Inquiry.where("LOWER(email) = ?", params[:email].strip.downcase)
+                        .order(created_at: :desc)
+  end
+
   private
 
   def inquiry_params

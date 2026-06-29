@@ -1,9 +1,13 @@
-<div class="form-container">
-  <h1>Submit a VA Inquiry</h1>
+<div>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900">Submit a VA Inquiry</h1>
+    <p class="text-slate-500 mt-2">We'll route your question to the appropriate VA service desk.</p>
+  </div>
 
   <% if @inquiry.errors.any? %>
-    <div class="error-summary">
-      <ul>
+    <div class="bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-xl mb-6">
+      <p class="font-medium mb-2">Please fix the following:</p>
+      <ul class="list-disc list-inside space-y-1 text-sm">
         <% @inquiry.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
@@ -12,39 +16,102 @@
   <% end %>
 
   <%= form_with model: @inquiry, data: { controller: "inquiry-form" } do |f| %>
-    <fieldset data-inquiry-form-target="step">
-      <legend>Step 1: Category</legend>
-      <%= f.label :category %>
-      <%= f.select :category, [["Education", "education"], ["Health Care", "health_care"], ["Benefits", "benefits"], ["Housing", "housing"], ["General", "general"]], { include_blank: "Select a category" } %>
-      <div class="form-actions">
-        <button type="button" data-action="inquiry-form#next">Next</button>
+
+    <%# Step indicator %>
+    <div class="flex items-center gap-2 mb-8" data-inquiry-form-target="stepIndicator">
+      <% ["Category", "Your Question", "Contact Info"].each_with_index do |label, i| %>
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold
+            <%= i == 0 ? 'bg-blue-800 text-white' : 'bg-slate-200 text-slate-500' %>"
+            data-inquiry-form-target="indicator">
+            <%= i + 1 %>
+          </div>
+          <span class="text-sm <%= i == 0 ? 'text-slate-800 font-medium' : 'text-slate-400' %>"
+                data-inquiry-form-target="indicatorLabel"><%= label %></span>
+          <% if i < 2 %>
+            <div class="w-8 h-px bg-slate-200 mx-1"></div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <fieldset data-inquiry-form-target="step" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-5 max-w-2xl">
+      <legend class="text-lg font-semibold text-slate-800 mb-2">What is your inquiry about?</legend>
+      <div class="grid grid-cols-1 gap-3">
+        <% [["Education", "education", "GI Bill, tuition, scholarships"],
+            ["Health Care", "health_care", "Appointments, prescriptions, mental health"],
+            ["Benefits", "benefits", "Disability claims, compensation, pension"],
+            ["Housing", "housing", "VA home loans, homeless veteran programs"],
+            ["General", "general", "All other questions"]].each do |label, value, desc| %>
+          <label class="flex items-start gap-4 p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+            <%= f.radio_button :category, value, class: "mt-1 accent-blue-700" %>
+            <div>
+              <div class="font-medium text-slate-800"><%= label %></div>
+              <div class="text-sm text-slate-500"><%= desc %></div>
+            </div>
+          </label>
+        <% end %>
+      </div>
+      <div class="pt-2 flex justify-end">
+        <button type="button" data-action="inquiry-form#next"
+          class="bg-blue-800 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-medium transition-colors">
+          Continue
+        </button>
       </div>
     </fieldset>
 
-    <fieldset data-inquiry-form-target="step" hidden>
-      <legend>Step 2: Your Question</legend>
-      <%= f.label :topic %>
-      <%= f.text_field :topic, placeholder: "Brief subject" %>
-      <%= f.label :body, "Question" %>
-      <%= f.text_area :body, rows: 6, placeholder: "Describe your question in detail" %>
-      <div class="form-actions">
-        <button type="button" data-action="inquiry-form#back">Back</button>
-        <button type="button" data-action="inquiry-form#next">Next</button>
+    <fieldset data-inquiry-form-target="step" hidden class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-5">
+      <legend class="text-lg font-semibold text-slate-800 mb-2">Describe your question</legend>
+      <div>
+        <%= f.label :topic, "Subject", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+        <%= f.text_field :topic, placeholder: "Brief subject line",
+              class: "w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+      <div>
+        <%= f.label :body, "Your Question", class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+        <%= f.text_area :body, rows: 6, placeholder: "Please describe your question in as much detail as possible.",
+              class: "w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" %>
+      </div>
+      <div class="pt-2 flex justify-between">
+        <button type="button" data-action="inquiry-form#back"
+          class="border border-slate-300 text-slate-600 px-6 py-2.5 rounded-lg font-medium hover:bg-slate-50 transition-colors">
+          Back
+        </button>
+        <button type="button" data-action="inquiry-form#next"
+          class="bg-blue-800 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-medium transition-colors">
+          Continue
+        </button>
       </div>
     </fieldset>
 
-    <fieldset data-inquiry-form-target="step" hidden>
-      <legend>Step 3: Contact Info</legend>
-      <%= f.label :first_name %>
-      <%= f.text_field :first_name %>
-      <%= f.label :last_name %>
-      <%= f.text_field :last_name %>
-      <%= f.label :email %>
-      <%= f.email_field :email %>
-      <div class="form-actions">
-        <button type="button" data-action="inquiry-form#back">Back</button>
-        <%= f.submit "Submit Inquiry" %>
+    <fieldset data-inquiry-form-target="step" hidden class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-5">
+      <legend class="text-lg font-semibold text-slate-800 mb-2">Your contact information</legend>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :first_name, class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+          <%= f.text_field :first_name,
+                class: "w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :last_name, class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+          <%= f.text_field :last_name,
+                class: "w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+      </div>
+      <div>
+        <%= f.label :email, class: "block text-sm font-medium text-slate-700 mb-1.5" %>
+        <%= f.email_field :email,
+              class: "w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+      <div class="pt-2 flex justify-between">
+        <button type="button" data-action="inquiry-form#back"
+          class="border border-slate-300 text-slate-600 px-6 py-2.5 rounded-lg font-medium hover:bg-slate-50 transition-colors">
+          Back
+        </button>
+        <%= f.submit "Submit Inquiry",
+              class: "bg-blue-800 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-medium transition-colors cursor-pointer" %>
       </div>
     </fieldset>
+
   <% end %>
 </div>

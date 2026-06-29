@@ -1,14 +1,48 @@
-<div class="status-card">
-  <p><strong>Reference:</strong> <%= inquiry.reference_number %></p>
-  <p><strong>Status:</strong> <%= inquiry.status.humanize %></p>
-  <p><strong>Category:</strong> <%= inquiry.category.humanize %></p>
-  <p><strong>Topic:</strong> <%= inquiry.topic %></p>
+<% status_styles = {
+  "submitted"      => "bg-amber-50 text-amber-700 border-amber-200",
+  "routed"         => "bg-blue-50 text-blue-700 border-blue-200",
+  "in_progress"    => "bg-purple-50 text-purple-700 border-purple-200",
+  "resolved"       => "bg-emerald-50 text-emerald-700 border-emerald-200",
+  "routing_failed" => "bg-red-50 text-red-700 border-red-200"
+} %>
 
-  <% if inquiry.routed? || inquiry.in_progress? || inquiry.resolved? %>
-    <p><strong>Assigned to:</strong> <%= inquiry.service_desk.name %></p>
-  <% end %>
+<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-8 space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-xs font-medium text-slate-400 uppercase tracking-widest mb-1">Reference Number</p>
+      <p class="font-mono text-2xl font-bold text-blue-900"><%= inquiry.reference_number %></p>
+    </div>
+    <span class="px-4 py-1.5 rounded-full text-sm font-semibold border <%= status_styles[inquiry.status] %>">
+      <%= inquiry.status.humanize %>
+    </span>
+  </div>
+
+  <div class="border-t border-slate-100 pt-6 grid grid-cols-2 gap-4 text-sm">
+    <div>
+      <p class="text-slate-400 mb-0.5">Category</p>
+      <p class="font-medium"><%= inquiry.category.humanize %></p>
+    </div>
+    <div>
+      <p class="text-slate-400 mb-0.5">Topic</p>
+      <p class="font-medium"><%= inquiry.topic %></p>
+    </div>
+    <% if inquiry.service_desk %>
+      <div>
+        <p class="text-slate-400 mb-0.5">Assigned To</p>
+        <p class="font-medium"><%= inquiry.service_desk.name %></p>
+      </div>
+    <% end %>
+    <% if inquiry.crm_ticket_id %>
+      <div>
+        <p class="text-slate-400 mb-0.5">CRM Ticket</p>
+        <p class="font-mono text-xs text-slate-600"><%= inquiry.crm_ticket_id %></p>
+      </div>
+    <% end %>
+  </div>
 
   <% if inquiry.routing_failed? %>
-    <p class="error">Routing failed. Please contact VA support.</p>
+    <div class="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+      Routing failed. Please contact VA support directly.
+    </div>
   <% end %>
 </div>

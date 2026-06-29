@@ -1,13 +1,20 @@
-<div class="dashboard">
-  <h1>Service Desk Dashboard</h1>
+<div>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900">Service Desk Dashboard</h1>
+    <p class="text-slate-500 mt-2">Manage and update incoming veteran inquiries.</p>
+  </div>
 
   <% if @inquiries.empty? %>
-    <p>No inquiries yet.</p>
+    <div class="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
+      No inquiries yet.
+    </div>
   <% else %>
-    <% @inquiries.each do |inquiry| %>
-      <turbo-frame id="inquiry_<%= inquiry.id %>">
-        <%= render "inquiry_card", inquiry: inquiry %>
-      </turbo-frame>
-    <% end %>
+    <div class="space-y-3">
+      <% @inquiries.each do |inquiry| %>
+        <turbo-frame id="inquiry_<%= inquiry.id %>">
+          <%= render "inquiry_card", inquiry: inquiry %>
+        </turbo-frame>
+      <% end %>
+    </div>
   <% end %>
 </div>

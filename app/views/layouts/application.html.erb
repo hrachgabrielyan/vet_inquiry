@@ -1,29 +1,52 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Vet Inquiry" %></title>
+    <title><%= content_for(:title) || "VetInquiry" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Vet Inquiry">
+    <meta name="application-name" content="VetInquiry">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+    </style>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-slate-50 text-slate-800 min-h-screen">
+    <header class="bg-gradient-to-r from-blue-950 to-blue-900 text-white shadow-lg">
+      <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-amber-400 rounded flex items-center justify-center font-bold text-blue-950 text-sm">VA</div>
+          <span class="font-semibold text-lg tracking-wide">VetInquiry</span>
+        </div>
+        <nav class="flex items-center gap-6 text-sm font-medium text-blue-200">
+          <%= link_to "Submit Inquiry", new_inquiry_path, class: "hover:text-white transition-colors" %>
+          <%= link_to "My Inquiries", lookup_inquiries_path, class: "hover:text-white transition-colors" %>
+          <%= link_to "Staff Dashboard", service_desks_inquiries_path, class: "hover:text-white transition-colors" %>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-10">
+      <% if notice %>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-xl mb-8 flex items-start gap-3">
+          <span class="text-emerald-500 mt-0.5">✓</span>
+          <%= notice %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </main>
+
+    <footer class="border-t border-slate-200 mt-16 py-6 text-center text-xs text-slate-400">
+      VetInquiry — A prototype VA inquiry routing system
+    </footer>
   </body>
 </html>

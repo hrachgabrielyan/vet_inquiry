@@ -1,9 +1,14 @@
-<div class="status-container">
-  <h1>Inquiry Status</h1>
+<div>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-slate-900">Track Your Inquiry</h1>
+    <p class="text-slate-500 mt-2">Status updates automatically as your inquiry is processed.</p>
+  </div>
 
   <turbo-frame id="inquiry-status"
                src="<%= inquiry_path(@inquiry) %>"
                data-turbo-refresh-interval="3000">
     <%= render "status_card", inquiry: @inquiry %>
   </turbo-frame>
+
+  <p class="text-xs text-slate-400 mt-4 text-center">Refreshing every 3 seconds &middot; Save your reference number to check back later</p>
 </div>
